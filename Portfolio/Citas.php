@@ -55,7 +55,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-white" href=",/Peluqueros.php">Peluqueros</a>
+                                <a class="nav-link text-white" href="./Peluqueros.php">Peluqueros</a>
                             </li>
 
                             <li class="nav-item">
@@ -66,8 +66,12 @@
                                 <a class="nav-link text-white" href="./Citas.php">Pedir cita</a>
                             </li>
 
+                            <li class="nav-item d-none" id="nav-admin-citas">
+                                <a class="nav-link text-white" href="./AdminCitas.php">Gestionar Citas</a>
+                            </li>
+
                             <li class="nav-item d-none" id="nav-logout">
-                                <a class="nav-link text-white" href="logout.php">Cerrar sesión</a>
+                                <a class="nav-link text-white" href="../logout.php">Cerrar sesión</a>
                             </li>
                         </ul>
                     </div>
@@ -116,17 +120,38 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="img/logo.jpg" alt="Logo" class="logo">
+                        <img src="../img/logo.jpg" alt="Logo" class="logo">
                         <p class="text-white">&copy; 2025</p>
                     </div>
                     <div class="col-md-4 pt-3 pt-md-0">
                         <h3 class="text-white">Enlaces</h3>
-                        <p id="footer-login"><a class="nav-link text-white" href="../login.php">Iniciar sesión</a></p>
-                        <p id="footer-register"><a class="nav-link text-white" href="../registro.php">Registrarme</a></p>
-                        <p><a class="nav-link text-white" href="../index.php">Inicio</a></p>
-                        <p><a class="nav-link text-white" href=",/Peluqueros.php">Peluqueros</a></p>
-                        <p><a class="nav-link text-white" href="./Catalogo.php">Catalogo</a></p>
-                        <p id="footer-cita"><a class="nav-link text-white" href="./Citas.php">Citas</a></p>
+                        <p id="footer-login">
+                            <a class="nav-link text-white" href="../login.php">Iniciar sesión</a>
+                        </p>
+
+                        <p id="footer-register">
+                            <a class="nav-link text-white" href="../registro.php">Registrarme</a>
+                        </p>
+
+                        <p>
+                            <a class="nav-link text-white" href="../index.php">Inicio</a>
+                        </p>
+
+                        <p>
+                            <a class="nav-link text-white" href="./Peluqueros.php">Peluqueros</a>
+                        </p>
+
+                        <p>
+                            <a class="nav-link text-white" href="./Catalogo.php">Catalogo</a>
+                        </p>
+
+                        <p id="footer-cita">
+                            <a class="nav-link text-white" href="./Citas.php">Citas</a>
+                        </p>
+
+                        <p class="d-none" id="footer-admin-citas">
+                            <a class="nav-link text-white" href="./AdminCitas.php">Gestionar Citas</a>
+                        </p>
                     </div>
                     <div class="col-md-4 pt-3 pt-md-0">
                         <h3 class="text-white">Contacto</h3>
@@ -139,43 +164,106 @@
         </footer>
 
         <script>
-        // Valor enviado desde PHP
+        // Valores desde PHP
         const isLogged = <?php echo isset($_SESSION["id_usuario"]) ? "true" : "false"; ?>;
+        const isAdmin = <?php echo (isset($_SESSION["rol"]) && $_SESSION["rol"] === "empleado") ? "true" : "false"; ?>;
 
         // NAV
         const navLogin = document.getElementById("nav-login");
         const navRegister = document.getElementById("nav-register");
         const navCita = document.getElementById("nav-cita");
         const navLogout = document.getElementById("nav-logout");
+        const navAdminCitas = document.getElementById("nav-admin-citas");
 
         // FOOTER
         const footerLogin = document.getElementById("footer-login");
         const footerRegister = document.getElementById("footer-register");
         const footerCita = document.getElementById("footer-cita");
+        const footerAdminCitas = document.getElementById("footer-admin-citas");
 
-        // BOTÓN DE "PIDE CITA AHORA"
+        // Botón "Pide cita ahora"
         const btnCitaHome = document.getElementById("btn-cita-home");
 
         if (isLogged) {
-            // SI ESTÁ LOGUEADO
+
+            // Ocultar login/registro en nav y footer
             if (navLogin) navLogin.style.display = "none";
             if (navRegister) navRegister.style.display = "none";
-
             if (footerLogin) footerLogin.style.display = "none";
             if (footerRegister) footerRegister.style.display = "none";
 
-            if (navCita) navCita.style.display = "block";
-            if (footerCita) footerCita.style.display = "block";
+            // Mostrar cerrar sesión
             if (navLogout) navLogout.classList.remove("d-none");
 
+            // CLIENTE
+            if (!isAdmin) {
+                if (navCita) navCita.style.display = "block";
+                if (footerCita) footerCita.style.display = "block";
+                if (btnCitaHome) btnCitaHome.style.display = "block";
+
+                if (navAdminCitas) navAdminCitas.classList.add("d-none");
+                if (footerAdminCitas) footerAdminCitas.classList.add("d-none");
+            }
+
+            // ADMIN
+            if (isAdmin) {
+                if (navAdminCitas) navAdminCitas.classList.remove("d-none");
+                if (footerAdminCitas) footerAdminCitas.classList.remove("d-none");
+
+                if (navCita) navCita.style.display = "none";
+                if (footerCita) footerCita.style.display = "none";
+                if (btnCitaHome) btnCitaHome.style.display = "none";
+            }
+
         } else {
-            // SI NO ESTÁ LOGUEADO
+
+            // USUARIO SIN SESIÓN
             if (navCita) navCita.style.display = "none";
             if (footerCita) footerCita.style.display = "none";
             if (btnCitaHome) btnCitaHome.style.display = "none";
 
             if (navLogout) navLogout.classList.add("d-none");
+            if (navAdminCitas) navAdminCitas.classList.add("d-none");
+            if (footerAdminCitas) footerAdminCitas.classList.add("d-none");
         }
+        </script>
+        <script>
+        // HORARIO DE LA PELUQUERÍA (modifícalo si quieres)
+        const horasDisponibles = [
+            "09:00", "09:30", "10:00", "10:30",
+            "11:00", "11:30", "12:00", "12:30",
+            "17:00", "17:30", "18:00"
+        ];
+
+        document.getElementById("fecha").addEventListener("change", function () {
+            const fechaSeleccionada = this.value;
+
+            if (!fechaSeleccionada) return;
+
+            fetch("horas_ocupadas.php?fecha=" + fechaSeleccionada)
+                .then(response => response.json())
+                .then(ocupadas => {
+                    const horaSelect = document.getElementById("hora");
+                    horaSelect.innerHTML = ""; // limpiar opciones
+
+                    horasDisponibles.forEach(hora => {
+                        const option = document.createElement("option");
+                        option.value = hora;
+                        option.textContent = hora;
+
+                        if (ocupadas.includes(hora)) {
+                            option.disabled = true;
+                            option.textContent += " (ocupada)";
+                        }
+
+                        horaSelect.appendChild(option);
+                    });
+                });
+        });
+        </script>
+        <script>
+            const isLogged = <?php echo isset($_SESSION["id_usuario"]) ? "true" : "false"; ?>;
+            const isAdmin = <?php echo (isset($_SESSION["rol"]) && $_SESSION["rol"] === "empleado") ? "true" : "false"; ?>;
         </script>
 
         <!-- Bootstrap JavaScript Libraries -->

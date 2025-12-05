@@ -1,17 +1,19 @@
 <?php
-session_start(); // Iniciar sesión
+session_start();
 
-// Incluir el archivo login.php para obtener los datos de conexión
 require_once 'conexion.php';
 
 function verificarUsuario($correo, $pw) {
     global $conn;
-    if (isset($correo) && isset($pw)) {
-        $correo = $conn->real_escape_string($correo); // Evita inyección SQL
-        $password = $pw;
 
-        // CORREGIDO: Usamos la tabla correcta "usuario"
-        $stmt = $conn->prepare("SELECT correo, id_usuario, contraseña FROM usuarios WHERE correo = ?");
+    if (!empty($correo) && !empty($pw)) {
+
+        $stmt = $conn->prepare("
+            SELECT id_usuario, correo, contraseña, rol 
+            FROM usuarios 
+            WHERE correo = ?
+        ");
+
         if (!$stmt) {
             die("Error en la consulta: " . $conn->error);
         }
@@ -20,30 +22,37 @@ function verificarUsuario($correo, $pw) {
         $stmt->execute();
         $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
+        if ($result->num_rows === 1) {
+
             $row = $result->fetch_assoc();
-            // Verificar la contraseña encriptada con password_verify()
-            if (password_verify($password, $row['contraseña'])) {
+            $passwordBD = $row["contraseña"];
+
+            // ACEPTA CONTRASEÑA HASH O NORMAL (BD manual)
+            if (password_verify($pw, $passwordBD) || $pw === $passwordBD) {
+
+                // GUARDAR TODA LA INFORMACIÓN NECESARIA
                 $_SESSION['id_usuario'] = $row['id_usuario'];
-                $stmt->close();
-                $conn->close();
-                // Redirigir a la página principal
+                $_SESSION['correo'] = $row['correo'];
+                $_SESSION['rol'] = $row['rol'];   // <<<<<< IMPORTANTE
+
+                // REDIRECCIÓN
                 header("Location: index.php");
-                exit(); // Asegúrate de usar exit después de header
-            } else {
-                echo "Usuario o contraseña incorrectos.<br>";
+                exit;
+            } 
+            else {
+                echo "<script>alert('Contraseña incorrecta'); window.location='login.php';</script>";
             }
-        } else {
-            echo "Usuario o contraseña incorrectos.<br>";
+        } 
+        else {
+            echo "<script>alert('Usuario no encontrado'); window.location='login.php';</script>";
         }
+
+        $stmt->close();
+        $conn->close();
     }
 }
 
-// Verificar si se ha enviado el formulario de login
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $correo = $_POST['correo'];
-    $pw = $_POST['contraseña'];
-    
-    verificarUsuario($correo, $pw);
+    verificarUsuario($_POST['correo'], $_POST['contraseña']);
 }
 ?>
