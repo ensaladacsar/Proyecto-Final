@@ -14,6 +14,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+        .container-fluid{
+            width: 100%;
+            padding: 0;
+        }
         .logo {
             max-height: 100px;
         }
@@ -104,47 +108,32 @@
             <div class="container mt-4">
 
                 <h2 class="mb-4">Catálogo de productos</h2>
+                <p>*Productos disponibles solo en tienda, el precio se añade a la factura final tras el tratamiento*</p>
 
                 <!-- Producto 1 -->
-                <div class="producto-item">
-                    <img src="../img/producto1.jpg" alt="Champú nutritivo">
-                    <div class="producto-info">
-                        <h3>Champú nutritivo</h3>
-                        <p>Ideal para cabellos secos. Hidrata profundamente.</p>
-                        <strong>Precio: 12,99 €</strong>
-                    </div>
-                </div>
+                <?php
+                    require_once '../conexion.php'; // Incluimos la conexión existente
 
-                <!-- Producto 2 -->
-                <div class="producto-item">
-                    <img src="../img/producto2.jpg" alt="Acondicionador hidratante">
-                    <div class="producto-info">
-                        <h3>Acondicionador hidratante</h3>
-                        <p>Suaviza y repara el cabello maltratado.</p>
-                        <strong>Precio: 10,50 €</strong>
-                    </div>
-                </div>
+                    // Consulta para obtener los datos de mis productos
+                    $stmt = $conn->prepare("SELECT * FROM productos");
+                    $stmt->execute();
+                    $result = $stmt->get_result();
 
-                <!-- Producto 3 -->
-                <div class="producto-item">
-                    <img src="../img/producto3.jpg" alt="Mascarilla reparadora">
-                    <div class="producto-info">
-                        <h3>Mascarilla reparadora</h3>
-                        <p>Repara daños profundos y aporta brillo.</p>
-                        <strong>Precio: 14,00 €</strong>
+                    for($i = 0; $i < $result->num_rows; $i++){
+                        $row = $result->fetch_assoc();
+                    
+                ?>
+                    <div class="producto-item">
+                        <img src="<?= $row["imagen"] ?>" alt="Champú nutritivo"> <!--Los ?= es lo mismo que hacer una etiqueta php con un echo -->
+                        <div class="producto-info">
+                            <h3><?= $row["nombre"] ?></h3>
+                            <p><?= $row["descripcion"] ?></p>
+                            <strong>Precio: <?= $row["precio"] ?></strong>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Producto 4 -->
-                <div class="producto-item">
-                    <img src="../img/producto4.jpg" alt="Aceite de argán premium">
-                    <div class="producto-info">
-                        <h3>Aceite de argán premium</h3>
-                        <p>Tratamiento perfecto para puntas abiertas y frizz.</p>
-                        <strong>Precio: 18,99 €</strong>
-                    </div>
-                </div>
-
+                <?php
+                    }
+                ?>
             </div>
         </main>
 
@@ -153,7 +142,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="img/logo.jpg" alt="Logo" class="logo">
+                        <img src="../img/logo.jpg" alt="Logo" class="logo">
                         <p class="text-white">&copy; 2025</p>
                     </div>
                     <div class="col-md-4 pt-3 pt-md-0">

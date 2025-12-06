@@ -14,6 +14,10 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <style>
+        .container-fluid{
+            width: 100%;
+            padding: 0;
+        }
         .logo {
             max-height: 100px;
         }

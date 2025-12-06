@@ -111,69 +111,67 @@ $result = $conn->query($query);
 
 <!-- MODAL AÑADIR -->
 <div class="modal fade" id="modalAgregar" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="procesarAgregar.php" method="POST">
-          <div class="modal-header">
-              <h5 class="modal-title">Añadir nueva cita</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-              <label>Cliente:</label>
-              <select name="id_cliente" class="form-select" required>
-                  <?php 
-                  $clientes = $conn->query("SELECT id_usuario, nombre, apellidos FROM usuarios WHERE rol='cliente'");
-                  while($cli = $clientes->fetch_assoc()) {
-                      echo "<option value='{$cli['id_usuario']}'>{$cli['nombre']} {$cli['apellidos']}</option>";
-                  }
-                  ?>
-              </select>
-              <label class="mt-2">Fecha:</label>
-              <input type="date" name="fecha" class="form-control" required>
-              <label class="mt-2">Hora:</label>
-              <input type="time" name="hora" class="form-control" required>
-              <label class="mt-2">Comentario:</label>
-              <textarea name="comentario" class="form-control"></textarea>
-          </div>
-          <div class="modal-footer">
-              <button type="submit" name="add_cita" class="btn btn-custom">Guardar</button>
-          </div>
-      </form>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="procesarAgregar.php" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Añadir nueva cita</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label>Cliente:</label>
+                    <select name="id_cliente" class="form-select" required>
+                        <?php 
+                        $clientes = $conn->query("SELECT id_usuario, nombre, apellidos FROM usuarios WHERE rol='cliente'");
+                        while($cli = $clientes->fetch_assoc()) {
+                            echo "<option value='{$cli['id_usuario']}'>{$cli['nombre']} {$cli['apellidos']}</option>";
+                        }
+                        ?>
+                    </select>
+                    <label class="mt-2">Fecha:</label>
+                    <input type="date" name="fecha" class="form-control" required>
+                    <label class="mt-2">Hora:</label>
+                    <input type="time" name="hora" class="form-control" required>
+                    <label class="mt-2">Comentario:</label>
+                    <textarea name="comentario" class="form-control"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="add_cita" class="btn btn-custom">Guardar</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- MODAL EDITAR -->
 <div class="modal fade" id="modalEditar" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="procesarEditar.php" method="POST">
-          <div class="modal-header">
-              <h5 class="modal-title">Editar cita</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-              <input type="hidden" name="id_cita" id="edit-id">
-              <label>Fecha:</label>
-              <input type="date" name="fecha" id="edit-fecha" class="form-control">
-              <label class="mt-2">Hora:</label>
-              <input type="time" name="hora" id="edit-hora" class="form-control">
-              <label class="mt-2">Comentario:</label>
-              <textarea name="comentario" id="edit-comentario" class="form-control"></textarea>
-              <label class="mt-2">Estado:</label>
-              <select name="estado" id="edit-estado" class="form-select">
-                  <option value="pendiente">Pendiente</option>
-                  <option value="confirmada">Confirmada</option>
-                  <option value="cancelada">Cancelada</option>
-                  <option value="atrasada">Atrasada</option>
-              </select>
-          </div>
-          <div class="modal-footer">
-              <button type="submit" class="btn btn-custom">Guardar cambios</button>
-          </div>
-      </form>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="procesarEditar.php" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar cita</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id_cita" id="edit-id">
+                    <label>Fecha:</label>
+                    <input type="date" name="fecha" id="edit-fecha" class="form-control">
+                    <label class="mt-2">Hora:</label>
+                    <input type="time" name="hora" id="edit-hora" class="form-control">
+                    <label class="mt-2">Comentario:</label>
+                    <textarea name="comentario" id="edit-comentario" class="form-control"></textarea>
+                    <label class="mt-2">Estado:</label>
+                    <select name="estado" id="edit-estado" class="form-select">
+                        <option value="confirmada">Confirmada</option>
+                        <option value="atrasada">Atrasada</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-custom">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
